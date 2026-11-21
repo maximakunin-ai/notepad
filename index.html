@@ -308,7 +308,7 @@ days.forEach((d,i)=>{
   const monthName=date.split(' ')[1];
   const b=document.createElement('button');
   const dayNumber=Number(date.split(' ')[0]);
-  const isVacation=monthName==='декабря'&&dayNumber>=5&&dayNumber<=20;
+  const isVacation=(monthName==='декабря'&&dayNumber>=5&&dayNumber<=20)||(weekday==='Суббота'||weekday==='Воскресенье')||(monthName==='декабря'&&dayNumber===25);
   b.className='day'+(plan!=="—"?' special':'')+(isVacation?' vacation':'');
   b.dataset.i=i;
   const monthLabel=(i===0||date.startsWith('1 декабря'))?'<div class="month-stamp">'+(monthName==='ноября'?'НОЯ':'ДЕК')+'</div>':'';
