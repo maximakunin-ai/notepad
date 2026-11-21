@@ -10,7 +10,7 @@ header{max-width:1200px;margin:auto;padding:34px 22px 22px;text-align:center} .e
 h1{font-size:clamp(30px,5vw,54px);font-weight:400;margin:12px 0 8px}.sub{color:var(--muted);font:14px Arial,sans-serif}
 .legend{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin:22px auto 0;font:12px Arial,sans-serif;color:var(--muted)}
 main{max-width:1200px;margin:auto;padding:10px 18px 70px}.month{color:var(--gold);font:12px Arial,sans-serif;letter-spacing:.18em;text-transform:uppercase;margin:24px 4px 12px}
-.grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
+.month-block{margin-bottom:26px}.weekdays{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:12px;margin:0 0 8px;color:var(--gold);font:11px Arial,sans-serif;text-align:center;letter-spacing:.08em}.grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:12px}.empty-day{min-height:1px}
 .day{position:relative;min-height:148px;border:1px solid #d8c69c;border-radius:10px;background:linear-gradient(145deg,#fff9ed,#e8dcc4);color:var(--ink);padding:13px 12px;text-align:left;cursor:pointer;box-shadow:0 5px 14px #06171055;transition:transform .18s,box-shadow .18s;overflow:hidden}
 .day:hover{transform:translateY(-4px);box-shadow:0 10px 22px #06171088}.day:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
 .day:after{content:"";position:absolute;inset:5px;border:1px solid #cbb98e;border-radius:6px;pointer-events:none}
@@ -23,9 +23,9 @@ footer{text-align:center;color:#9eb2a5;font:12px Arial,sans-serif;padding:20px}
 .mdate{font:11px Arial,sans-serif;letter-spacing:.18em;color:#8a7548;text-transform:uppercase}.modal h2{font-weight:400;font-size:34px;margin:8px 38px 4px 0}.mplace{color:#68766c;font:14px Arial,sans-serif;margin-bottom:20px}
 .section{border-top:1px solid #d8cfbd;padding:14px 0}.section h3{font:10px Arial,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#8a7548;margin:0 0 8px}.section p{font-size:16px;line-height:1.5;margin:0}.edit-field{display:block;width:100%;min-height:112px;border:1px solid #c9bea9;border-radius:8px;background:#fffdf8;color:var(--ink);padding:11px;font:15px/1.5 Arial,sans-serif;resize:vertical}.edit-help{font:11px Arial,sans-serif;color:#7b806f;margin-top:6px}.actions .save{background:#244b3d;color:white;border-color:#244b3d}.film{font-style:italic}.note{font:12px Arial,sans-serif;color:#77847b;line-height:1.45}
 .actions{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px;flex-wrap:wrap}.actions button{border:1px solid #a99b7d;background:transparent;color:var(--ink);border-radius:30px;padding:10px 15px;cursor:pointer;font:12px Arial}.actions .check{background:#244b3d;color:white;border-color:#244b3d}.actions button:disabled{opacity:.35}
-@media(max-width:900px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
-@media(max-width:600px){header{padding-top:26px}.grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}main{padding:4px 10px 50px}.day{min-height:126px;padding:10px 9px}.date{font-size:26px}.place{font-size:12px}.month{margin-top:20px}.modal{padding:22px 18px 16px}.modal h2{font-size:29px}.section p{font-size:15px}}
-@media(max-width:360px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:900px){.grid,.weekdays{gap:8px}}
+@media(max-width:600px){header{padding-top:26px}main{padding:4px 8px 50px}.grid,.weekdays{gap:4px}.weekdays{font-size:9px;letter-spacing:0;margin-bottom:5px}.day{min-height:102px;padding:6px 3px;border-radius:7px}.day:after{inset:3px}.num{font-size:7px;letter-spacing:0}.date{font-size:21px;margin:6px 0 3px}.weekday{font-size:8px}.place{font-size:9px;line-height:1.15;margin-top:5px;overflow-wrap:anywhere}.tag{font-size:6px;letter-spacing:0;margin-top:5px}.month{margin-top:20px}.modal{padding:22px 18px 16px}.modal h2{font-size:29px}.section p{font-size:15px}}
+@media(max-width:360px){.day{min-height:94px}.date{font-size:19px}.place{font-size:8px}}
 </style></head>
 <body>
 <header><div class="eyebrow">Winter notes · 2026</div><h1>Зимнее путешествие</h1><div class="sub">26 ноября — 27 декабря · Германия, Франция и маленькие открытия</div><div class="legend"><span>✦ обязательные планы</span><span>❄ идеи на день</span><span>♫ кино на вечер</span></div></header>
@@ -292,8 +292,36 @@ const days = [
 ];
 const months={"ноября":"НОЯБРЬ 2026","декабря":"ДЕКАБРЬ 2026"};
 const calendar=document.getElementById('calendar');
-days.forEach((d,i)=>{const [date,weekday,place,plan,idea,film]=d;const m=date.split(' ')[1];if(i===0||date.startsWith('1 декабря')){const h=document.createElement('div');h.className='month';h.textContent=months[m];calendar.append(h)}
-const b=document.createElement('button');b.className='day'+(plan!=="—"?' special':'');b.dataset.i=i;b.innerHTML='<div class="num">ДЕНЬ '+String(i+1).padStart(2,'0')+'</div><div class="date">'+date.split(' ')[0]+'</div><div class="weekday">'+weekday+'</div><div class="place">'+place+'</div>'+(plan!=="—"?'<div class="tag">✦ важный план</div>':'');calendar.append(b);b.addEventListener('click',()=>openDay(i));});
+const weekdayNames=['ПН','ВТ','СР','ЧТ','ПТ','СБ','ВС'];
+let activeMonth='';
+let activeGrid=null;
+days.forEach((d,i)=>{
+  const [date,weekday,place,plan]=d;
+  const monthName=date.split(' ')[1];
+  if(monthName!==activeMonth){
+    activeMonth=monthName;
+    const block=document.createElement('section');
+    block.className='month-block';
+    const heading=document.createElement('div');
+    heading.className='month';
+    heading.textContent=months[monthName];
+    const labels=document.createElement('div');
+    labels.className='weekdays';
+    weekdayNames.forEach(name=>{const label=document.createElement('div');label.textContent=name;labels.append(label);});
+    activeGrid=document.createElement('div');
+    activeGrid.className='grid';
+    block.append(heading,labels,activeGrid);
+    calendar.append(block);
+    const weekdayIndex=weekdayNames.indexOf(({ 'Понедельник':'ПН','Вторник':'ВТ','Среда':'СР','Четверг':'ЧТ','Пятница':'ПТ','Суббота':'СБ','Воскресенье':'ВС'})[weekday]);
+    for(let pad=0;pad<weekdayIndex;pad++){const blank=document.createElement('div');blank.className='empty-day';activeGrid.append(blank);}
+  }
+  const b=document.createElement('button');
+  b.className='day'+(plan!=="—"?' special':'');
+  b.dataset.i=i;
+  b.innerHTML='<div class="num">ДЕНЬ '+String(i+1).padStart(2,'0')+'</div><div class="date">'+date.split(' ')[0]+'</div><div class="weekday">'+weekday+'</div><div class="place">'+place+'</div>'+(plan!=="—"?'<div class="tag">✦ важный план</div>':'');
+  activeGrid.append(b);
+  b.addEventListener('click',()=>openDay(i));
+});
 const overlay=document.getElementById('overlay');let current=0;const done=JSON.parse(localStorage.getItem('winter-trip-done')||'{}');
 const custom=JSON.parse(localStorage.getItem('winter-trip-content')||'{}');
 Object.keys(custom).forEach(k=>{if(days[Number(k)]){if(typeof custom[k].plan==='string')days[Number(k)][3]=custom[k].plan;if(typeof custom[k].ideas==='string')days[Number(k)][4]=custom[k].ideas;}});
